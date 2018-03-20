@@ -1,0 +1,17 @@
+.greeting {
+	text-shadow: inherit;
+	background-color: #518bba;
+	font-size: 16px;
+	box-sizing: border-box;
+	font-family: 'ButtercupSample';
+	position: relative;
+	line-height: 1.1;
+	border-radius: 0.3;
+    text-shadow: none;
+    white-space: nowrap;
+    vertical-align: baseline;
+    color: #fff;
+    display: inline-block;
+    margin: 1px;
+    padding: 0.3em 0.5em;
+}
