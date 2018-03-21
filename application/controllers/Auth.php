@@ -20,7 +20,7 @@ class Auth extends CI_Controller {
 		$data['ActionLogin'] = site_url('Auth/Login');
 		// $data['ActionRegister'] = site_url('Auth/Register');
 		// $data['ActionForget'] = site_url('Auth/Forgetpassword');
-		$data['Title'] = 'Hai, Posyandu';
+		$data['Title'] = 'Hai';
 		$view = $this->Public .'index';
        	$this->template_library->load('Auth', $view, $data);
 	}
@@ -114,7 +114,7 @@ class Auth extends CI_Controller {
 
 		$Auth = $this->auth_library->Login($name,$pwd);
 			if($Auth == "Sukses") { //success Login
-				redirect(site_url('Cms/#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
+				redirect(site_url('Cms#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
 			} elseif($Auth == "not found"){  // failed User not found
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');

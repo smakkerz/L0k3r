@@ -3,23 +3,10 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-<!-- 		<link rel="shorcut icon" href="<?php echo base_url(); ?>Assets/images/ucac.jpg" />
+		<link rel="shorcut icon" href="<?php echo base_url(); ?>Assets/images/logo.png" />
 
-		<meta name="title" content="<?= $this->settingvalue_library->Getvalue("Title")->Value ?>" />
+		<meta name="title" content="why" />
 		<meta name="images" content="<?php echo base_url(); ?>Assets/images/ucac.jpg" />
-		<meta name="description" content="<?= $this->settingvalue_library->Getvalue("Description")->Value ?>" />
-		<meta name="author" content="<?= $this->settingvalue_library->Getvalue("Author")->Value ?>" />
-
-	     <meta property="og:url" content="<?php echo base_url(); ?>" />
-	     <meta property="og:title" content="<?= $this->settingvalue_library->Getvalue("Title")->Value ?>" />
-	     <meta property="og:description" content="<?= $this->settingvalue_library->Getvalue("Description")->Value ?>" />
-	     <meta property="og:site_name" content="<?= $this->settingvalue_library->Getvalue("Title_Home")->Value ?>" />
-	     <meta property="og:image" content="<?php echo base_url(); ?>Assets/images/ucac.jpg" />
-	     <meta property="og:image:type" content="image/jpeg" />
-	     <meta property="og:type" content="website" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<title><?= $this->settingvalue_library->Getvalue("Title_Home")->Value ?></title>
- -->
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="<?php echo base_url()?>Assets/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="<?php echo base_url()?>Assets/font-awesome/4.5.0/css/font-awesome.min.css" />
@@ -68,7 +55,6 @@
 					<a href="<?= base_url('home') ?>" class="navbar-brand">
 						<small>
 							<img src="<?php echo base_url(); ?>Assets/images/logo.png" class="img-circle" style="background-color: white;" width="29px"> JobSribe
-							<!-- <?= $this->settingvalue_library->Getvalue("Name")->Value ?> -->
 						</small>
 					</a>
 				</div>
@@ -78,7 +64,7 @@
 
 						<li class="light-blue dropdown-modal">
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-							<img src="<?php echo base_url(); ?>Assets/images/ucac.jpg" class="img-circle" width="22px">
+							<img src="<?php echo base_url(); ?>Assets/images/logo.png" class="img-circle" width="22px">
 								<span class="user-info">
 									<small id="greeting"></small>,
 									<?=ucfirst($this->session->userdata('name')) ?>
@@ -89,14 +75,14 @@
 
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 								<li>
-									<a href="<?= base_url('reset.py') ?>/<?=md5($this->session->userdata('id_bio')) ?>">
+									<a href="<?= base_url('reset.py') ?>">
 										<i class="ace-icon fa fa-lock"></i>
 										Ganti Password
 									</a>
 								</li>
 
 								<li>
-									<a href="<?= base_url('profil.py') ?>/<?=md5($this->session->userdata('id_bio')) ?>">
+									<a href="<?= base_url('profil.py') ?>">
 										<i class="ace-icon fa fa-user"></i>
 										Profil
 									</a>
@@ -120,7 +106,7 @@
 		<div class="main-container ace-save-state" id="main-container">
 			<div id="sidebar" class="sidebar responsive ace-save-state">
 
-				<?php $this->load->view('_Sidebar') ?>
+				<?php $this->load->view('Templates/_Sidebar') ?>
 
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
 					<i id="sidebar-toggle-icon" class="ace-icon fa fa-angle-double-left ace-save-state" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
@@ -129,7 +115,7 @@
             <div class="main-content">
                 <div class="main-content-inner">
 	                <div class="breadcrumbs" id="breadcrumbs">
-	                	<?php $this->load->view('_Mini_menu') ?>
+	                	<?php $this->load->view('Templates/_Mini_menu') ?>
 					</div>
 					<div class="page-content">
 						<div class="ace-settings-container" id="ace-settings-container">

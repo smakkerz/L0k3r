@@ -5,21 +5,12 @@
 		<meta charset="utf-8" />
 		<link rel="shorcut icon" href="<?php echo base_url(); ?>Assets/images/logo.png" />
 
-		<meta name="title" content="<?= $Title ?>" />
-		<meta name="images" content="<?php echo base_url(); ?>Assets/images/ucac.jpg" />
-		<!-- <meta name="description" content="<?= $this->settingvalue_library->Getvalue("Description")->Value ?>" />
-		<meta name="author" content="<?= $this->settingvalue_library->Getvalue("Author")->Value ?>" />
-
-	     <meta property="og:url" content="<?php echo base_url(); ?>" />
-	     <meta property="og:title" content="<?= $this->settingvalue_library->Getvalue("Title")->Value ?>" />
-	     <meta property="og:description" content="<?= $this->settingvalue_library->Getvalue("Description")->Value ?>" />
-	     <meta property="og:site_name" content="<?= $this->settingvalue_library->Getvalue("Title_Home")->Value ?>" /> -->
+		<meta name="title" content="why" />
+		<meta name="images" content="<?php echo base_url(); ?>Assets/images/logo.png" />
 	     <meta property="og:image" content="<?php echo base_url(); ?>Assets/images/ucac.jpg" />
 	     <meta property="og:image:type" content="image/jpeg" />
 	     <meta property="og:type" content="website" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<!-- <title><?= $this->settingvalue_library->Getvalue("Title_Home")->Value ?></title> -->
-
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="<?php echo base_url()?>Assets/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="<?php echo base_url()?>Assets/font-awesome/4.5.0/css/font-awesome.min.css" />
@@ -81,7 +72,6 @@
 
 									<img src="<?php echo base_url(); ?>Assets/images/logo.png" class="img-circle" width="50px">
 									<span class="blue">JobScribe</span><span class="white">.com</span>
-									<!-- <?= $this->settingvalue_library->Getvalue("System")->Value ?> -->
 
 								</h1>
 
@@ -97,7 +87,7 @@
 
 
 
-							<?=$contents ?>
+							<?= $contents ?>
 
 
 
