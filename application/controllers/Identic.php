@@ -12,17 +12,22 @@ class Identic extends CI_Controller {
 
 	public function index()
 	{
+		$session = $this->session->userdata('isLogin');
+        if($session == FALSE) {
 		// $data['agent'] = $this->useragent_library->GetDataClient();
 		// $data['Company'] = $this->settingvalue_library->Getvalue('Name_Company')->Value;
 		// $data['NoCompany'] = $this->settingvalue_library->Getvalue('No_Company')->Value;;
 		// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
 		// $data['ID'] = $this->settingvalue_library->AutoIncrement('Settings', 'ID', 'ID');
-		$data['ActionLogin'] = site_url('Auth/Login');
+		$data['ActionLogin'] = site_url('Identic/Login');
 		// $data['ActionRegister'] = site_url('Auth/Register');
 		// $data['ActionForget'] = site_url('Auth/Forgetpassword');
 		$data['Title'] = 'Hai, Posyandu';
-		$view = $this->Public .'Index';
-       	$this->template_library->load('Auth', $view, $data);
+		$view = $this->Public .'index';
+       	$this->template_library->load('Identic', $view, $data);
+       	} else {
+        redirect('#'.bin2hex($this->session->userdata('')), 'refresh');
+        }
 	}
 
 	public function Register()   ///POST Capital first
@@ -112,17 +117,17 @@ class Identic extends CI_Controller {
 		$name = $this->input->post('PostUser',TRUE);
 		$pwd = $this->input->post('PostPass',TRUE);
 
-		$Auth = $this->auth_library->Login($name,$pwd);
+		$Auth = $this->identic_library->Login($name,$pwd);
 			if($Auth == "Sukses") { //success Login
 				redirect(site_url('/#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
 			} elseif($Auth == "not found"){  // failed User not found
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic'));
 			}else {  // failed wrong combination
 			$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-exclamation-sign"></i> Kombinasi Akun salah </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic'));
 			}
 		}
 	}
@@ -130,7 +135,7 @@ class Identic extends CI_Controller {
 	public function logout()
     {
         $this->session->sess_destroy();
-        redirect('Auth','refresh');
+        redirect('/','refresh');
     }
 
 	public function _validateLogin()

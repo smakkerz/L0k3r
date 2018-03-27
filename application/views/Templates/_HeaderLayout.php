@@ -1,20 +1,42 @@
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <!-- Navigation bar -->
+    <nav class="navbar">
       <div class="container">
-        <a class="navbar-brand" href="#"><img class="img-circle" src="<?= base_url('Assets/images/logo.png') ?>" width="29px">
-         Job Scribe</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Sign Up</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= base_url('Auth') ?>">Log In</a>
-            </li>
-          </ul>
+
+        <!-- Logo -->
+        <div class="pull-left">
+          <a class="navbar-toggle" href="#" data-toggle="offcanvas"><i class="ti-menu"></i></a>
+
+          <div class="logo-wrapper">
+            <a class="logo" href="index.html"><img src="<?= base_url("Assets/images/logo.png") ?>" alt="logo"></a>
+            <a class="logo-alt" href="index.html"><img src="<?= base_url("Assets/images/logo.png") ?>" alt="logo-alt"></a>
+          </div>
+
         </div>
+        <!-- END Logo -->
+
+        <!-- User account -->
+        <div class="pull-right user-login">
+        <?php if($this->session->userdata("isLogin") == FALSE){ ?>
+          <a class="btn btn-sm btn-primary" href="<?= base_url("Identic") ?>">Masuk</a> atau <a href="user-register.html"> daftar</a>
+        <?php } else { ?>
+          <a class="btn btn-sm btn-primary" href="<?= base_url("Identic/Logout") ?>">Keluar</a>
+        <?php } ?>
+
+        </div>
+        <!-- END User account -->
+
+        <!-- Navigation menu -->
+        <ul class="nav-menu">
+          <li>
+            <li><a class="active" href="#">Beranda</a></li>
+          </li>
+          <li>
+            <a href="job-list-1.html">Cari Lowongan</a>
+          </li>
+          <li><a href="#">Bantuan</a></li>
+        </ul>
+        <!-- END Navigation menu -->
+
       </div>
     </nav>
+    <!-- END Navigation bar -->

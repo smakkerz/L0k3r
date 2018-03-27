@@ -11,7 +11,7 @@ class Identic_library {
 	{
 		$this->sesi  = $this->CI->session->userdata('isLogin');
 		if($this->sesi != TRUE){
-			redirect('Auth','refresh');
+			redirect('Identic','refresh');
 			exit();
 		}
 	}
@@ -29,7 +29,7 @@ class Identic_library {
 	function Login($user, $pass){
 	$Status = "";
 	$Login=$this->CI->db->query("SELECT *
-	 FROM m_candidate WHERE Username ='$user' OR Email = '$user' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
+	 FROM m_candidate WHERE Username ='$user' OR Email = '$user' OR Phone = '$user' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
 	$this->depwd = $this->CI->encryption->decrypt($Login->Password);
 	if($Login == NULL) {
 		return $Status = "not found";
