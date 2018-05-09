@@ -1,7 +1,7 @@
 <main>
 
       <div class="login-block">
-        <img src="<?= base_url("Assets/img/jobsribe-logo.png") ?>" alt="">
+        <a href="<?= base_url('/') ?>"><img src="<?= base_url("Assets/img/jobsribe-logo.png") ?>" alt=""></a>
         <h1>Masuk &amp; Akses Lebih Jauh</h1>
         <?= $this->session->userdata('error') <> '' ? $this->session->userdata('error') : ''; ?>
                 <?= $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
@@ -39,7 +39,7 @@
 
       <div class="login-links">
         <a class="pull-left" href="user-forget-pass.html">Lupa Katasandi?</a>
-        <a class="pull-right" href="user-register.html">Saya Belum Punya Akun</a>
+        <a class="pull-right" href="<?= base_url('register/candidate') ?>">Saya Belum Punya Akun</a>
       </div>
 
     </main>

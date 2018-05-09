@@ -10,14 +10,15 @@
 				</div>
 				<div class="info">
 					<b class="caret pull-right"></b>
-					Sean Ngu
-					<small>Front end developer</small>
+					<?= $this->session->userdata('Unique_user') ?>
+					<small><?= $this->session->userdata('name') ?></small>
 				</div>
 			</a>
 		</li>
 		<li>
 			<ul class="nav nav-profile">
-                <li><a href="javascript:;"><i class="fa fa-cog"></i> Settings</a></li>
+                <li><a href="<?= base_url('Cms/profile/'.$this->session->userdata('Unique_user')) ?>"">
+                <i class="fa fa-user"></i> Profile</a></li>
                 <li><a href="javascript:;"><i class="fa fa-pencil-alt"></i> Send Feedback</a></li>
                 <li><a href="javascript:;"><i class="fa fa-question-circle"></i> Helps</a></li>
             </ul>

@@ -11,7 +11,7 @@ class Identic_library {
 	{
 		$this->sesi  = $this->CI->session->userdata('isLogin');
 		if($this->sesi != TRUE){
-			redirect('Identic','refresh');
+			redirect('login/candidate','refresh');
 			exit();
 		}
 	}
@@ -19,32 +19,33 @@ class Identic_library {
 	public function cek_akses($kecuali)
 	{
 		$this->sesi = $this->CI->session->userdata('isLogin');
-		$this->hak = $this->CI->session->userdata('level');
+		$this->hak = $this->CI->session->userdata('Role');
 		if($this->hak != $kecuali){
 			redirect(base_url());
 			exit();
 		}
 	}
 
-	function Login($user, $pass){
+	function Login($uUser, $Pass){
 	$Status = "";
-	$Login=$this->CI->db->query("SELECT *
-	 FROM m_candidate WHERE Username ='$user' OR Email = '$user' OR Phone = '$user' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
-	$this->depwd = $this->CI->encryption->decrypt($Login->Password);
+	$login=$this->CI->db->query("SELECT *
+	 FROM m_candidate WHERE Username ='$User' OR Email = '$User' OR Phone = '$User' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
+	$this->depwd = $this->CI->encryption->decrypt($login->Password);
 	if($Login == NULL) {
 		return $Status = "not found";
 	}
-	if($this->depwd == $pass) {
+	if($this->depwd == $Pass) {
 
 		$this->CI->session->set_userdata(array(
+				'Role' => 'Candidate',
                 'isLogin' => TRUE,
-                'name' => $Login->Name,
-                'alias' => $Login->Alias,
-                'picture' => $Login->Picture,
-                'Unique_user' => $Login->UniqID,
-                'username' => $Login->Username,
-                'email'=> $Login->Email,
-                'active'=> $Login->IsActive
+                'name' => $login->Name,
+                'alias' => $login->Alias,
+                'picture' => $login->Picture,
+                'Unique_user' => $login->UniqID,
+                'username' => $login->Username,
+                'email'=> $login->Email,
+                'active'=> $login->IsActive
                 ));
 		$Status = "Sukses";
 		return $Status;
@@ -52,23 +53,19 @@ class Identic_library {
 	return $Status;
     }
     
-    function ValidasiAdd($table, $field, $data){
+    function ValidasiAdd($Table, $Field, $Data){
 	$Status = "Found";
-	$Login=$this->CI->db->query("SELECT *
-	 FROM $table WHERE $field = '$data' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
-	if($Login == NULL) {
+	$data=$this->CI->db->query("SELECT *
+	 FROM $Table WHERE $Field = '$Data' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
+	if($data == NULL) {
 		$Status = "Not Found";
 		return $Status;
+	}
+	else
+	{
+		$Status = $data;
 	}
 	return $Status;
     }
 
-    function ExplodeName($name){
-    	$Name['first'] = implode(' ', array_slice(explode(' ',$name), 0, -1));
-    	$Name['last'] = array_slice(explode(' ', $name), -1)[0];
-    	return $Name;
-    	// $LastName = (strpos($name, ' ') == false ? '' : preg_replace('#.*\s([w-]*)$#', '$1', $name));
-    	// $FirstName = trim(preg_replace('#'.$LastName.'#', '', $name));
-    	// return array($FirstName, $LastName);
-    }
 }

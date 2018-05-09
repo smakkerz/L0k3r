@@ -19,10 +19,11 @@ class Useragent_library
 		}else{
 			$agent = 'Data user gagal di dapatkan';
 		}
-		//$ip = $this->CI->input->ip_address();
-    	//$clientDetails = json_decode(file_get_contents("http://ipinfo.io/$ip/json"));
-    	//$ip = $clientDetails->country." " .$clientDetails->city . " ". $clientDetails->ip;
     	$ip = "Testing dilocalhost";
+		// $ip = $this->CI->input->ip_address();
+  //   	$clientDetails = json_decode(file_get_contents("http://ipinfo.io/$ip/json"));
+  //   	$ip = $clientDetails->country." " .$clientDetails->region . " ". $clientDetails->ip;
+
 		$datas = array(
 			"Device" => $this->CI->agent->mobile() == NULL ? "is_Dekstop" : $this->CI->agent->mobile(),
 			"Browser" => $agent,

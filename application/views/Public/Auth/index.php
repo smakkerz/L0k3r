@@ -1,46 +1,49 @@
-	<main>
-
-      <div class="login-block">
-        <img src="<?= base_url("Assets/img/jobsribe-logo.png") ?>" alt="">
-        <h1>Masuk Untuk Perusahaan</h1>
+ <div class="news-feed">
+    <div class="news-image" style="background-image: url(<?= base_url('Assets/Company/img/login-bg/login-bg-10.jpg') ?>)"></div>
+    <div class="news-caption">
+        <h4 class="caption-title"><b>Ar</b> Lizo</h4>
+        <p>
+            As a Color Admin app administrator, you use the Color Admin console to manage your organization’s account, such as add new users, manage security settings, and turn on the services you want your team to access.
+        </p>
+    </div>
+</div>
+<div class="right-content">
+    <!-- begin register-header -->
+    <h1 class="register-header">
+        Sign In
+        <small>Create your Color Admin Account. It’s free and always will be.</small>
 
                 <?= $this->session->userdata('error') <> '' ? $this->session->userdata('error') : ''; ?>
                 <?= $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
+    </h1>
+    <!-- end register-header -->
+    <!-- begin register-content -->
+    <div class="register-content">
         <form action="<?= $ActionLogin ?>" method="post">
-
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="ti-email"></i></span>
-              <input type="text" class="form-control" name="PostUser" placeholder="Email">
+            <label class="control-label">Email <span class="text-danger">*</span></label>
+            <div class="row m-b-15">
+                <div class="col-md-12">
+              <input type="text" class="form-control" name="PostUser" placeholder="Email" required>
+                </div>
             </div>
-          </div>
-
-          <hr class="hr-xs">
-
-          <div class="form-group">
-            <div class="input-group">
-              <span class="input-group-addon"><i class="ti-unlock"></i></span>
-              <input type="password" name="PostPass" class="form-control" placeholder="Katasandi">
+            <label class="control-label">Password <span class="text-danger">*</span></label>
+            <div class="row m-b-15">
+                <div class="col-md-12">
+              <input type="password" name="PostPass" class="form-control" placeholder="Kata sandi" required>
+                </div>
             </div>
-          </div>
 
-          <button class="btn btn-primary btn-block" type="submit">Masuk</button>
-
-          <div class="login-footer">
-            <h6>atau masuk menggunakan</h6>
-            <ul class="social-icons">
-              <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-              <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-              <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
-            </ul>
-          </div>
-
+          	<div class="register-buttons">
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
+            </div>
+            <div class="m-t-20 m-b-40 p-b-40 text-inverse">
+                Belum mempunyai Akun? Klik <a href="<?= base_url('register/company') ?>">disini</a> untuk daftar.
+            </div>
+            <hr />
+            <p class="text-center">
+                &copy; Color Admin All Right Reserved 2018
+            </p>
         </form>
-      </div>
-
-      <div class="login-links">
-        <a class="pull-left" href="user-forget-pass.html">Lupa Katasandi?</a>
-        <a class="pull-right" href="user-register.html">Saya Belum Punya Akun</a>
-      </div>
-
-    </main>
+    </div>
+    <!-- end register-content -->
+</div>

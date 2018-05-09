@@ -40,6 +40,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | 				 Sites using Latin-1 or UTF-8 database character set and collation are unaffected.
 |	['swap_pre'] A default table prefix that should be swapped with the dbprefix
 |	['encrypt']  Whether or not to use an encrypted connection.
+	'hostname' => 'mysql.hostinger.co.id',
+	'username' => 'u608181157_mloke',
+	'password' => 'u608181157_M',
+	'database' => 'u608181157_mloke',
 |
 |			'mysql' (deprecated), 'sqlsrv' and 'pdo/sqlsrv' drivers accept TRUE/FALSE
 |			'mysqli' and 'pdo/mysql' drivers accept an array with the following options:
@@ -79,7 +83,7 @@ $db['default'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'master_loker',
+	'database' => 'u608181157_mloke',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -103,7 +107,7 @@ $db['data'] = array(
 	'hostname' => 'localhost',
 	'username' => 'root',
 	'password' => '',
-	'database' => 'data_loker',
+	'database' => 'u608181157_dloke',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

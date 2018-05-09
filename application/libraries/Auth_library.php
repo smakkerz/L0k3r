@@ -11,7 +11,7 @@ class Auth_library {
 	{
 		$this->sesi  = $this->CI->session->userdata('isLogin');
 		if($this->sesi != TRUE){
-			redirect('Auth','refresh');
+			redirect('login/company','refresh');
 			exit();
 		}
 	}
@@ -19,56 +19,53 @@ class Auth_library {
 	public function cek_akses($kecuali)
 	{
 		$this->sesi = $this->CI->session->userdata('isLogin');
-		$this->hak = $this->CI->session->userdata('level');
+		$this->hak = $this->CI->session->userdata('Role');
 		if($this->hak != $kecuali){
 			redirect(base_url());
 			exit();
 		}
 	}
 
-	function Login($user, $pass){
+	function Login($User, $Pass){
 	$Status = "";
-	$Login=$this->CI->db->query("SELECT *
-	 FROM m_company WHERE Username ='$user' OR Email = '$user' AND IsDeleted = 0")->row();
-	$this->depwd = $this->CI->encryption->decrypt($Login->Password);
-	if($Login == NULL) {
+	$login = $this->CI->db->query("SELECT *
+	 FROM m_company WHERE Username ='$User' OR Email = '$User' AND IsDeleted = 0")->row();
+	$this->depwd = $this->CI->encryption->decrypt($login->Password);
+	if($login == NULL) {
 		return $Status = "not found";
 	}
-	if($this->depwd == $pass) {
+	if($this->depwd == $Pass) {
 
 		$this->CI->session->set_userdata(array(
+				'Role' => 'Company',
                 'isLogin' => TRUE,
-                'name' => $Login->Name,
-                'alias' => $Login->Alias,
-                'picture' => $Login->Picture,
-                'Unique_user' => $Login->UniqID,
-                'username' => $Login->Username,
-                'email'=> $Login->Email,
-                'active'=> $Login->IsActive
+                'name' => $login->Name,
+                'alias' => $login->Alias,
+                'picture' => $login->Picture,
+                'Unique_user' => $login->UniqID,
+                'username' => $login->Username,
+                'email'=> $login->Email,
+                'active'=> $login->IsActive
                 ));
 		$Status = "Sukses";
 		return $Status;
 	}
 	return $Status;
     }
-    
-    function ValidasiAdd($table, $field, $data){
+
+    function Search($Field, $Data){
 	$Status = "Found";
-	$Login=$this->CI->db->query("SELECT *
-	 FROM $table WHERE $field = '$data' AND IsDeleted = 0 ORDER BY CreatedDate ASC ")->row();
-	if($Login == NULL) {
+	$data=$this->CI->db->query("SELECT *
+	 FROM m_company C LEFT JOIN m_companydetail Cd on Cd.IDCompany = C.ID WHERE C.$Field = '$Data' AND C.IsDeleted = 0 ORDER BY C.Created_at ASC ")->row();
+	if($data == NULL) {
 		$Status = "Not Found";
 		return $Status;
 	}
+	else
+	{
+		$Status = $data;
+	}
 	return $Status;
     }
-
-    function ExplodeName($name){
-    	$Name['first'] = implode(' ', array_slice(explode(' ',$name), 0, -1));
-    	$Name['last'] = array_slice(explode(' ', $name), -1)[0];
-    	return $Name;
-    	// $LastName = (strpos($name, ' ') == false ? '' : preg_replace('#.*\s([w-]*)$#', '$1', $name));
-    	// $FirstName = trim(preg_replace('#'.$LastName.'#', '', $name));
-    	// return array($FirstName, $LastName);
-    }
+    
 }

@@ -7,29 +7,54 @@ class Settingvalue_library
 
     function __construct() {
         $this->CI = &get_instance();
+        $this->CI->load->database('default');
 //        $this->isLogin();
     }
 
-	function Getvalue($code){
+	function Getvalue($Code){
 	$Setting=$this->CI->db->query("SELECT *
-	 FROM Settings WHERE Code='$code' AND IsDeleted = 0 ORDER BY CreatedDate ASC ")->row();
+	 FROM Settings WHERE Code='$Code' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
 	return $Setting;
     }
 
-    function GetvalueInArray($code){
+    function GetvalueInArray($Code){
 	$Setting=$this->CI->db->query("SELECT *
-	 FROM Settings WHERE Code='$code' AND IsDeleted = 0 ORDER BY CreatedDate ASC ")->row();
+	 FROM Settings WHERE Code='$Code' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
 	$Setting = explode("=", $Setting->Value);
 	return $Setting;
     }
 
-    function AutoIncrement($tabel, $order, $field){
-    	$Number = $this->CI->db->query("SELECT $field as No FROM $tabel ORDER BY $order DESC")->row();
-    	if($Number == NULL && $Number->No > 1)
+    function AutoIncrement($Table, $Order, $Field){
+    	$Number = $this->CI->db->query("SELECT $Field as No FROM $Table ORDER BY $Order DESC")->row();
+    	if($Number == NULL || $Number->No < 1)
     	{
     		$Number->No = 1;
     	}
+        else{
+            $Number->No = $Number->No + 1;
+        }
     	return $Number;
+    }
+
+    function ValidasiAdd($Table, $Field, $Data){
+    $Status = "Found";
+    $data=$this->CI->db->query("SELECT *
+     FROM $Table WHERE $Field = '$Data' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
+    if($data == NULL) {
+        $Status = "Not Found";
+        return $Status;
+    }
+    else
+    {
+        $Status = $data;
+    }
+    return $Status;
+    }
+
+    function ExplodeName($Value){
+        $Name['first'] = implode(' ', array_slice(explode(' ',$Value), 0, -1));
+        $Name['last'] = array_slice(explode(' ', $Value), -1)[0];
+        return $Name;
     }
 
 }

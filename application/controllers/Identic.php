@@ -8,6 +8,7 @@ class Identic extends CI_Controller {
     {
         parent::__construct();  
         $this->Public = 'Public/Identic/';
+        $this->load->model('crudmaster_model');
     }
 
 	public function index()
@@ -20,79 +21,105 @@ class Identic extends CI_Controller {
 		// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
 		// $data['ID'] = $this->settingvalue_library->AutoIncrement('Settings', 'ID', 'ID');
 		$data['ActionLogin'] = site_url('Identic/Login');
-		// $data['ActionRegister'] = site_url('Auth/Register');
-		// $data['ActionForget'] = site_url('Auth/Forgetpassword');
+		// $data['ActionRegister'] = site_url('Identic/Register');
+		// $data['ActionForget'] = site_url('Identic/Forgetpassword');
 		$data['Title'] = 'Hai, Posyandu';
 		$view = $this->Public .'index';
        	$this->template_library->load('Identic', $view, $data);
        	} else {
-        redirect('#'.bin2hex($this->session->userdata('')), 'refresh');
+        redirect('#'.bin2hex($this->session->userdata('Unique_user')), 'refresh');
         }
 	}
 
-	public function Register()   ///POST Capital first
+	public function register()
 	{
-		$this->_validateRegister();
-		if($this->form_validation->run() == FALSE) {
-            redirect(site_url('Auth'));
-		} else {
+		$session = $this->session->userdata('isLogin');
+        if($session == FALSE) {
+		// $data['agent'] = $this->useragent_library->GetDataClient();
+		// $data['Company'] = $this->settingvalue_library->Getvalue('Name_Company')->Value;
+		// $data['NoCompany'] = $this->settingvalue_library->Getvalue('No_Company')->Value;;
+		// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
+		$data['ID'] = $this->settingvalue_library->AutoIncrement('m_candidate', 'ID', 'ID');
+		$data['ActionRegister'] = site_url('Identic/RegisterPost');
+		// $data['ActionRegister'] = site_url('Identic/Register');
+		// $data['ActionForget'] = site_url('Identic/Forgetpassword');
+		$data['Title'] = 'Hai, Posyandu';
+		$view = $this->Public .'register';
+       	$this->template_library->load('Identic', $view, $data);
+       	} else {
+        redirect('#'.bin2hex($this->session->userdata('Unique_user')), 'refresh');
+        }
+	}
+
+	public function RegisterPost()   ///POST Capital first
+	{
+		// $this->_validateRegCandidate();
+		// if($this->form_validation->run() == FALSE) {
+  //           redirect(site_url('Identic/register'));
+		// } else {
 			$Fullname = $this->input->post('PostName', TRUE);
 			$Birthdate = $this->input->post('PostDate', TRUE);
-			$User = $this->input->post('Postuser', TRUE);
-			$Password = $this->input->post('Postpass', TRUE);
+			$Email = $this->input->post('PostEmail', TRUE);
+			$Password = $this->input->post('PostPassword', TRUE);
 			$Phone = $this->input->post('PostPhone', TRUE);
-			$City = $this->input->post('PostCity', TRUE);
 
 			$Agent = $this->useragent_library->GetDataClient();
-			$Validasiphone = $this->auth_library->ValidasiAdd('Users','Phone', $Phone);
+
+			$Validasiphone = $this->settingvalue_library->ValidasiAdd('m_candidate','Phone', $Phone);
 			if($Validasiphone != 'Not Found'){
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
             	<i class="glyphicon glyphicon-minus-sign"></i> Phone sudah digunakan</div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic/register'));
 			}
-			$Validasiuser = $this->auth_library->ValidasiAdd('Users', 'User', $User);
-			if($Validasiuser != 'Not Found'){
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
-            	<i class="glyphicon glyphicon-minus-sign"></i> Nama User sudah digunakan</div>');
-            redirect(site_url('Auth'));
+
+			$Validasimail = $this->settingvalue_library->ValidasiAdd('m_candidate', 'Email', $Email);
+			if($Validasimail != 'Not Found'){
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
+            	<i class="glyphicon glyphicon-minus-sign"></i> Email sudah digunakan</div>');
+            redirect(site_url('Identic/register'));
 			}
-			$Uniq = $User."-".date('i');
+
+			$Uniq = uniqid().$this->settingvalue_library->AutoIncrement('m_candidate', 'ID', 'ID')->No;
+
+			$Validasiuniq = $this->settingvalue_library->ValidasiAdd('m_candidate', 'UniqID', $Uniq);
+			if($Validasiuniq != 'Not Found'){
+				$Uniq = uniqid().$this->settingvalue_library->AutoIncrement('m_candidate', 'ID', 'ID')->No;
+			}
 			$Birthdate = date('Y-m-d', strtotime($Birthdate));
-			$Name = $this->auth_library->ExplodeName($Fullname);
-			$data = array (
-				'Unique_ID' => $Uniq,
-				'FirstName' => $Name[first],
-				'LastName' => $Name[last],
-				'User' => $User,
+			//$Name = $this->Identic_library->ExplodeName($Fullname);
+			$data = array(
+				'UniqID' => $Uniq,
+				'Name' => $Fullname,
+				'Email' => $Email,
 				'Phone' => $Phone,
 				'Password' => $this->encryption->encrypt($Password),
-				'City' => $City,
 				'BirthDate' => $Birthdate,
-				'Role' => 'Officer',
-				'IPAddress' => $Agent['IP'],
+				'Flag' => 'Register-Web',
+				'IP' => $Agent['IP'],
 				'OSystem' => $Agent['OSystem'],
 				'Browser' => $Agent['Browser'],
-				'Device' => $Agent['Device'],
-				'CreatedDate' => date('Y-m-d H:i:s'),
-				'CreatedBy' => $Fullname,
-				'IsApproved' => 1,
+				'Platform' => $Agent['Device'],
+				'Created_at' => date('Y-m-d H:i:s'),
+				'Created_by' => $Fullname,
+				'IsActive' => 1,
 				'IsDeleted' => 0
 				);
-			$this->operation_model->insert('Users', $data);
+			
+			$this->crudmaster_model->Add('m_candidate', $data);
 			///Login kan
-			$Auth = $this->auth_library->Login($User,$Password);
-			if($Auth == "Sukses") { //success Login
-				redirect(site_url('/#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
-			} elseif($Auth == "not found"){  // failed User not found
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+			$Identic = $this->identic_library->Login($Phone,$Password);
+			if($Identic == "Sukses") { //success Login
+				redirect(site_url('?RegisternLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
+			} elseif($Identic == "not found"){  // failed User not found
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic?'.$Identic));
 			}else {  // failed wrong combination
-			$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+			$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-exclamation-sign"></i> Kombinasi Akun salah </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic?false'));
 			}
-		}
+		// }
 	}
 
 	public function Forgetpassword()   ///POST Capital first
@@ -112,22 +139,22 @@ class Identic extends CI_Controller {
 		if ($this->form_validation->run() == FALSE) {
             $this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
             	<i class="glyphicon glyphicon-minus-sign"></i> Mohon diisi form login</div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('Identic'));
         } else {
 		$name = $this->input->post('PostUser',TRUE);
 		$pwd = $this->input->post('PostPass',TRUE);
 
-		$Auth = $this->identic_library->Login($name,$pwd);
-			if($Auth == "Sukses") { //success Login
-				redirect(site_url('/#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
-			} elseif($Auth == "not found"){  // failed User not found
+		$Identic = $this->identic_library->Login($name,$pwd);
+			if($Identic == "Sukses") { //success Login
+				redirect(site_url('?Login='.$this->session->userdata('Unique_user')).'+'.date('His'));
+			} elseif($Identic == "not found"){  // failed User not found
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');
-            redirect(site_url('Identic'));
+            redirect(site_url('login/candidate?not-found'));
 			}else {  // failed wrong combination
 			$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-exclamation-sign"></i> Kombinasi Akun salah </div>');
-            redirect(site_url('Identic'));
+            redirect(site_url('login/candidate?false'));
 			}
 		}
 	}
@@ -146,14 +173,14 @@ class Identic extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
 	}
 
-	public function _validateRegister()
+	public function _validateRegCandidate()
 	{
-		$this->form_validation->set_rules('Postuser', 'User', 'trim|required');
-		$this->form_validation->set_rules('Postpass', 'Password', 'trim|required');
-		$this->form_validation->set_rules('PostName', 'User', 'trim|required');
-		$this->form_validation->set_rules('PostPhone', 'Password', 'trim|required');
-		$this->form_validation->set_rules('PostCity', 'User', 'trim|required');
-		$this->form_validation->set_rules('PostDate', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('PostEmail', 'User', 'trim|required');
+		// $this->form_validation->set_rules('Postpass', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('PostName', 'User', 'trim|required');
+		// $this->form_validation->set_rules('PostPhone', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('PostCity', 'User', 'trim|required');
+		// $this->form_validation->set_rules('PostDate', 'Password', 'trim|required');
 
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
 	}

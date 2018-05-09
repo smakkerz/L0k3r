@@ -8,91 +8,112 @@ class Auth extends CI_Controller {
     {
         parent::__construct();  
         $this->Public = 'Public/Auth/';
+        $this->load->model('crudmaster_model');
+        $this->load->library('email_library');
+        $now = time();
     }
 
 	public function index()
 	{
 		$session = $this->session->userdata('isLogin');
         if($session == FALSE) {
-		// $data['agent'] = $this->useragent_library->GetDataClient();
-		// $data['Company'] = $this->settingvalue_library->Getvalue('Name_Company')->Value;
-		// $data['NoCompany'] = $this->settingvalue_library->Getvalue('No_Company')->Value;;
-		// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
-		// $data['ID'] = $this->settingvalue_library->AutoIncrement('Settings', 'ID', 'ID');
-		$data['ActionLogin'] = site_url('Auth/Login');
-		// $data['ActionRegister'] = site_url('Auth/Register');
-		// $data['ActionForget'] = site_url('Auth/Forgetpassword');
-		$data['Title'] = 'Hai';
-		$view = $this->Public .'index';
-       	$this->template_library->load('Auth', $view, $data);
+			// $data['agent'] = $this->useragent_library->GetDataClient();
+			// $data['Company'] = $this->settingvalue_library->Getvalue('Name_Company')->Value;
+			// $data['NoCompany'] = $this->settingvalue_library->Getvalue('No_Company')->Value;;
+			// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
+			// $data['ID'] = $this->settingvalue_library->AutoIncrement('Settings', 'ID', 'ID');
+			$data['ActionLogin'] = site_url('Auth/Login');
+			// $data['ActionRegister'] = site_url('Auth/Register');
+			// $data['ActionForget'] = site_url('Auth/Forgetpassword');
+			$data['Title'] = 'Hai';
+			$view = $this->Public .'index';
+	       	$this->template_library->load('Auth', $view, $data);
        	} else {
-        redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('sis'), 'refresh');
+        	redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('sis'), 'refresh');
         }
 	}
 
-	public function Register()   ///POST Capital first
+	public function register()
 	{
-		$this->_validateRegister();
-		if($this->form_validation->run() == FALSE) {
-            redirect(site_url('Auth'));
-		} else {
+		$session = $this->session->userdata('isLogin');
+        if($session == FALSE) {
+			$data['ID'] = $this->settingvalue_library->AutoIncrement('m_company', 'ID', 'ID');
+			$data['ActionRegister'] = site_url('Auth/RegisterPost');
+			$data['Title'] = 'Hai, Posyandu';
+			$view = $this->Public .'register';
+	       	$this->template_library->load('Auth', $view, $data);
+       	} else {
+        	redirect('#'.bin2hex($this->session->userdata('Unique_user')), 'refresh');
+        }
+	}
+
+	public function RegisterPost()   ///POST Capital first
+	{
+		// $this->_validateRegister();
+		// if($this->form_validation->run() == FALSE) {
+  //           redirect(site_url('register/company'));
+		// } else {
 			$Fullname = $this->input->post('PostName', TRUE);
-			$Birthdate = $this->input->post('PostDate', TRUE);
-			$User = $this->input->post('Postuser', TRUE);
-			$Password = $this->input->post('Postpass', TRUE);
+			$Email = $this->input->post('PostEmail', TRUE);
+			$Password = $this->input->post('PostPassword', TRUE);
 			$Phone = $this->input->post('PostPhone', TRUE);
-			$City = $this->input->post('PostCity', TRUE);
 
 			$Agent = $this->useragent_library->GetDataClient();
-			$Validasiphone = $this->auth_library->ValidasiAdd('Users','Phone', $Phone);
+			$Validasiphone = $this->settingvalue_library->ValidasiAdd('m_companydetail','Phone', $Phone);
 			if($Validasiphone != 'Not Found'){
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
             	<i class="glyphicon glyphicon-minus-sign"></i> Phone sudah digunakan</div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('register/company'));
 			}
-			$Validasiuser = $this->auth_library->ValidasiAdd('Users', 'User', $User);
+			$Validasiuser = $this->settingvalue_library->ValidasiAdd('m_company', 'Email', $Email);
 			if($Validasiuser != 'Not Found'){
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
             	<i class="glyphicon glyphicon-minus-sign"></i> Nama User sudah digunakan</div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('register/company'));
 			}
-			$Uniq = $User."-".date('i');
-			$Birthdate = date('Y-m-d', strtotime($Birthdate));
-			$Name = $this->auth_library->ExplodeName($Fullname);
+			$Uniq = uniqid().$this->settingvalue_library->AutoIncrement('m_company', 'ID', 'ID')->No;
+			$User = uniqid(date('i')).$this->settingvalue_library->AutoIncrement('m_company', 'ID', 'ID')->No;
+
 			$data = array (
-				'Unique_ID' => $Uniq,
-				'FirstName' => $Name[first],
-				'LastName' => $Name[last],
-				'User' => $User,
-				'Phone' => $Phone,
+				'UniqID' => $Uniq,
+				'Username' => $User,
+				'Email' => $Email,
+				'Name' => $Fullname,
 				'Password' => $this->encryption->encrypt($Password),
-				'City' => $City,
-				'BirthDate' => $Birthdate,
-				'Role' => 'Officer',
-				'IPAddress' => $Agent['IP'],
+				'Created_at' => date('Y-m-d H:i:s'),
+				'Created_by' => $Fullname
+				);
+			$ID = $this->crudmaster_model->Add('m_company', $data);
+
+				$detail = array(
+				'IDCompany' => $ID,
+				'IP' => $Agent['IP'],
+				'Flag' => 'Register-Web',
+				'Phone' => $Phone,
 				'OSystem' => $Agent['OSystem'],
 				'Browser' => $Agent['Browser'],
-				'Device' => $Agent['Device'],
-				'CreatedDate' => date('Y-m-d H:i:s'),
-				'CreatedBy' => $Fullname,
-				'IsApproved' => 1,
+				'Platform' => $Agent['Device'],
+				'Created_at' => date('Y-m-d H:i:s'),
+				'Created_by' => $Fullname,
 				'IsDeleted' => 0
 				);
-			$this->operation_model->insert('Users', $data);
+			$this->crudmaster_model->Add('m_companydetail', $detail);
+			$Body = "Terima kasih registrasi anda berhasil selangkah lagi ".$Fullname." dapat menggunakan fitur dari Ar Lizo";
+			$this->email_library->Send(null, $Email, 'Verifikasi Email Ar Lizo', $Body, $Fullname);
 			///Login kan
-			$Auth = $this->auth_library->Login($User,$Password);
+			$Auth = $this->auth_library->Login($Email,$Password);
 			if($Auth == "Sukses") { //success Login
-				redirect(site_url('/#SukesLogin='.$this->session->userdata('Unique_user')).'+'.date('His'));
+				redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('His'), 'refresh');
 			} elseif($Auth == "not found"){  // failed User not found
-				$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('register/company'));
 			}else {  // failed wrong combination
-			$this->session->set_flashdata('msg', '<div class="alert alert-danger" style="font-size : 16px;">
+			$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
 				<i class="glyphicon glyphicon-exclamation-sign"></i> Kombinasi Akun salah </div>');
-            redirect(site_url('Auth'));
+            redirect(site_url('register/company'));
 			}
-		}
+		// }
 	}
 
 	public function Forgetpassword()   ///POST Capital first
@@ -119,8 +140,10 @@ class Auth extends CI_Controller {
 
 		$Auth = $this->auth_library->Login($name,$pwd);
 			if($Auth == "Sukses") { //success Login
-
             $this->session->set_flashdata('message', '<input type="hidden" id="message" value="login" />');
+
+			$this->email_library->NotifSession($this->session->userdata('email'), null, 'login');
+
 				redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('His'), 'refresh');
 			} elseif($Auth == "not found"){  // failed User not found
 				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
@@ -136,6 +159,7 @@ class Auth extends CI_Controller {
 
 	public function logout()
     {
+    	//$this->email_library->NotifSession($this->session->userdata('email'), null, 'logout');
         $this->session->sess_destroy();
         redirect('Auth','refresh');
     }
@@ -150,12 +174,12 @@ class Auth extends CI_Controller {
 
 	public function _validateRegister()
 	{
-		$this->form_validation->set_rules('Postuser', 'User', 'trim|required');
-		$this->form_validation->set_rules('Postpass', 'Password', 'trim|required');
-		$this->form_validation->set_rules('PostName', 'User', 'trim|required');
-		$this->form_validation->set_rules('PostPhone', 'Password', 'trim|required');
-		$this->form_validation->set_rules('PostCity', 'User', 'trim|required');
-		$this->form_validation->set_rules('PostDate', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('Postuser', 'User', 'trim|required');
+		// $this->form_validation->set_rules('Postpass', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('PostName', 'User', 'trim|required');
+		// $this->form_validation->set_rules('PostPhone', 'Password', 'trim|required');
+		// $this->form_validation->set_rules('PostCity', 'User', 'trim|required');
+		// $this->form_validation->set_rules('PostDate', 'Password', 'trim|required');
 
 		$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
 	}

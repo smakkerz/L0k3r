@@ -1,3 +1,4 @@
+<div id="content" class="content">
 <!-- begin breadcrumb -->
     <ol class="breadcrumb pull-right">
         <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
@@ -549,3 +550,4 @@
             <!-- end col-4 -->
         </div>
         <!-- end row -->
+</div>
