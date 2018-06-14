@@ -30,7 +30,7 @@
 
             <ul class="dropdown-menu dropdown-menu-right">
               <li><a href="<?= base_url("profile/".$this->session->userdata('Unique_user')) ?>">Akun</a></li>
-              <li><a href="user-register.html">Register</a></li>
+              <li><a href="<?= base_url("Member/sendverifikasi") ?>">Kirim Verifikasi</a></li>
               <li><a href="user-forget-pass.html">Forget pass</a></li>
               <li><a href="<?= base_url("Identic/Logout") ?>">Logout</a></li>
             </ul>

@@ -22,7 +22,7 @@ class Auth extends CI_Controller {
 			// $data['NoCompany'] = $this->settingvalue_library->Getvalue('No_Company')->Value;;
 			// $data['City'] = $this->settingvalue_library->GetvalueInArray('City_Option');
 			// $data['ID'] = $this->settingvalue_library->AutoIncrement('Settings', 'ID', 'ID');
-			$data['ActionLogin'] = site_url('Auth/Login');
+			$data['ActionLogin'] = site_url('Auth/LoginPost');
 			// $data['ActionRegister'] = site_url('Auth/Register');
 			// $data['ActionForget'] = site_url('Auth/Forgetpassword');
 			$data['Title'] = 'Hai';
@@ -80,28 +80,24 @@ class Auth extends CI_Controller {
 				'Email' => $Email,
 				'Name' => $Fullname,
 				'Password' => $this->encryption->encrypt($Password),
-				'Created_at' => date('Y-m-d H:i:s'),
-				'Created_by' => $Fullname
 				);
-			$ID = $this->crudmaster_model->Add('m_company', $data);
+			$ID = $this->crudmaster_model->Add('m_company', $data, $Fullname);
 
 				$detail = array(
 				'IDCompany' => $ID,
 				'IP' => $Agent['IP'],
-				'Flag' => 'Register-Web',
+				'Flag' => 'Web',
 				'Phone' => $Phone,
 				'OSystem' => $Agent['OSystem'],
 				'Browser' => $Agent['Browser'],
 				'Platform' => $Agent['Device'],
-				'Created_at' => date('Y-m-d H:i:s'),
-				'Created_by' => $Fullname,
 				'IsDeleted' => 0
 				);
-			$this->crudmaster_model->Add('m_companydetail', $detail);
-			$Body = "Terima kasih registrasi anda berhasil selangkah lagi ".$Fullname." dapat menggunakan fitur dari Ar Lizo";
-			$this->email_library->Send(null, $Email, 'Verifikasi Email Ar Lizo', $Body, $Fullname);
+			$this->crudmaster_model->Add('m_companydetail', $detail, $Fullname);
 			///Login kan
 			$Auth = $this->auth_library->Login($Email,$Password);
+			$Url = base_url()."verification/";
+			$this->email_library->SendVerifikasi('On Progress Verification Account', $Url); #Send email verifikasi
 			if($Auth == "Sukses") { //success Login
 				redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('His'), 'refresh');
 			} elseif($Auth == "not found"){  // failed User not found
@@ -116,45 +112,53 @@ class Auth extends CI_Controller {
 		// }
 	}
 
-	public function Forgetpassword()   ///POST Capital first
+	public function LoginPost()  //POST Capital  first
 	{
-		$data['agent'] = $this->settingsvalue_library->Getvalue('Name_Company');
-		$this->load->view('Public/forgetpassword', $data);
-	}
-
-	public function NewPassword()
-	{
-
-	}
-
-	public function Login()  //POST Capital  first
-	{
-		$this->_validateLogin();
-		if ($this->form_validation->run() == FALSE) {
-            $this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
-            	<i class="glyphicon glyphicon-minus-sign"></i> Mohon diisi form login</div>');
-            redirect(site_url('Auth'));
-        } else {
 		$name = $this->input->post('PostUser',TRUE);
 		$pwd = $this->input->post('PostPass',TRUE);
 
-		$Auth = $this->auth_library->Login($name,$pwd);
-			if($Auth == "Sukses") { //success Login
-            $this->session->set_flashdata('message', '<input type="hidden" id="message" value="login" />');
-
-			$this->email_library->NotifSession($this->session->userdata('email'), null, 'login');
-
-				redirect('Cms#'.$this->session->userdata('Unique_user').'+'.date('His'), 'refresh');
-			} elseif($Auth == "not found"){  // failed User not found
-				$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
-				<i class="glyphicon glyphicon-remove-sign"></i> User tidak ada </div>');
-            redirect(site_url('Auth'));
-			}else {  // failed wrong combination
-			$this->session->set_flashdata('message', '<div class="alert alert-danger" style="font-size : 16px;">
-				<i class="glyphicon glyphicon-exclamation-sign"></i> Kombinasi Akun salah </div>');
-            redirect(site_url('Auth'));
+		$Identic = $this->auth_library->Login($name,$pwd);
+			if($Identic == "not found"){  // failed User not found
+				$Response = array (
+					'StatusCode' => '30',
+					'StatusMessage' => 'User Tidak ada');
+			}elseif($Identic == "not match") {  // failed wrong combination
+				$Response = array (
+					'StatusCode' => '50',
+					'StatusMessage' => 'Kombinasi Akun salah');
+			}else{ //success Login
+				$Response = array (
+					'StatusCode' => '200',
+					'StatusMessage' => 'Success',
+					'Value' => $Identic);
+				$this->email_library->NotifSession($this->session->userdata('email'), null, 'login');
 			}
+		echo json_encode($Response);
+	}
+
+	public function ForgetPost()   ///Post Forget Password
+	{
+		$Key = $this->input->post('Key', TRUE);
+		$UniqID = $this->input->post('PostUniqID', TRUE);
+		$Password = $this->input->post('PostPass', TRUE);
+
+		$company = $this->crudmaster_model->GetBy('m_company', 'UniqID', $UniqID);
+		$verify = $this->cruddata_model->GetBy('verification', 'Keep', $Key);
+		$response = array(
+			'StatusCode' => '20',
+			'StatusMessage' => 'Oops Data tidak ditemukan, mungkin data yang anda kirim salah/kosong');
+		if($verify != null && $company != null && $Password != null) {
+
+			$data['Password'] = $Password; #update password
+			$this->crudmaster_model->Update('m_company', 'UniqID', $UniqID, $data);
+			#ubah key verification
+			$this->dverification_model->Accept($Key, 'Success Reset Password');
+
+			$response = array(
+			'StatusCode' => '200',
+			'StatusMessage' => 'Success Reset Password');
 		}
+		echo json_encode($response);
 	}
 
 	public function logout()

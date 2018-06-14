@@ -3,14 +3,12 @@
       <div class="login-block">
         <a href="<?= base_url('/') ?>"><img src="<?= base_url("Assets/img/jobsribe-logo.png") ?>" alt=""></a>
         <h1>Masuk &amp; Akses Lebih Jauh</h1>
-        <?= $this->session->userdata('error') <> '' ? $this->session->userdata('error') : ''; ?>
-                <?= $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
-        <form action="<?= $ActionLogin ?>" method="post">
+        <form action="<?= $ActionLogin ?>" method="post" id="formlogin">
 
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="ti-email"></i></span>
-              <input type="text" class="form-control" name="PostUser" placeholder="Email">
+              <input type="text" class="form-control" name="PostUser" id="PostUser" placeholder="Email" required>
             </div>
           </div>
 
@@ -19,11 +17,11 @@
           <div class="form-group">
             <div class="input-group">
               <span class="input-group-addon"><i class="ti-unlock"></i></span>
-              <input type="password" name="PostPass" class="form-control" placeholder="Katasandi">
+              <input type="password" name="PostPass" class="form-control" id="PostPass" placeholder="Katasandi" required>
             </div>
           </div>
-
-          <button class="btn btn-primary btn-block" type="submit">Masuk</button>
+          <p id="msg"></p>
+          <button class="btn btn-primary btn-block" id="submit_login" type="submit">Masuk</button>
 
           <div class="login-footer">
             <h6>atau masuk menggunakan</h6>

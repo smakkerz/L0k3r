@@ -16,11 +16,11 @@ class Auth_library {
 		}
 	}
 
-	public function cek_akses($kecuali)
+	public function cek_akses($Kecuali)
 	{
 		$this->sesi = $this->CI->session->userdata('isLogin');
 		$this->hak = $this->CI->session->userdata('Role');
-		if($this->hak != $kecuali){
+		if($this->hak != $Kecuali){
 			redirect(base_url());
 			exit();
 		}
@@ -29,11 +29,11 @@ class Auth_library {
 	function Login($User, $Pass){
 	$Status = "";
 	$login = $this->CI->db->query("SELECT *
-	 FROM m_company WHERE Username ='$User' OR Email = '$User' AND IsDeleted = 0")->row();
-	$this->depwd = $this->CI->encryption->decrypt($login->Password);
+	 FROM m_company WHERE Username = '$User' OR Email = '$User' AND IsDeleted = 0")->row();
 	if($login == NULL) {
 		return $Status = "not found";
-	}
+	}	
+	$this->depwd = $this->CI->encryption->decrypt($login->Password);
 	if($this->depwd == $Pass) {
 
 		$this->CI->session->set_userdata(array(
@@ -45,10 +45,15 @@ class Auth_library {
                 'Unique_user' => $login->UniqID,
                 'username' => $login->Username,
                 'email'=> $login->Email,
-                'active'=> $login->IsActive
+                'active'=> $login->IsActive,
+                'verified' => $login->Verified,
+                'created_at' => $login->Created_at
                 ));
-		$Status = "Sukses";
+		$Status = $login;
 		return $Status;
+	}
+	else {
+		return $Status = "not match";
 	}
 	return $Status;
     }

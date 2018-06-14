@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="JobSribe.Com, Lowongan Kerja Terbaru Setai Hari dari Segala Bidang Pekerjaan & Lokasi Kerja">
     <meta name="keywords" content="">
+    <meta name="theme-color" content="#4db8fe">
 
     <title>JobSribe - Portal Kerja Online</title>
 

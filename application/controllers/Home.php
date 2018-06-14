@@ -9,12 +9,14 @@ class Home extends CI_Controller {
         parent::__construct();  
         //$this->Identic_library->cek_identic();
         $this->Home = 'Candidate/Home/';
+        $this->load->model('cruddata_model');
+        $this->load->model('crudmaster_model');
+        $this->load->model('dverification_model');
     }
 
 	public function index()
 	{
 		$data['agent'] = $this->useragent_library->GetDataClient();
-		$data['assets'] = base_url('Assets/Candidate');
 		// $data['Company'] = $this->settingvalue_library->Getvalue('Name_Company')->Value;
 		// //$data['Title'] = "Home - ". $this->session->userdata('Unique_user');
 
@@ -46,11 +48,11 @@ class Home extends CI_Controller {
 	public function profile($Id=null)
 	{
 
-		$candidate = $this->identic_library->ValidasiAdd('m_candidate','UniqID', $Id);
+		$candidate = $this->identic_library->Validasi('UniqID', $Id);
 
 		if($candidate == "Not Found"){
 			$Uniq = $this->session->userdata('Unique_user');
-			$candidate = $this->identic_library->ValidasiAdd('m_candidate','UniqID', $Uniq);
+			$candidate = $this->identic_library->Validasi('UniqID', $Uniq);
 
 			if($candidate == "Not Found"){
 				redirect(site_url('/'));
@@ -63,4 +65,118 @@ class Home extends CI_Controller {
        	$this->template_library->load('Layout',$view, $data);
 
 	}
+
+	#region All
+	public function verification($Key)
+	{
+		#cari Key
+		$Qlue = array('Keep' => $Key);
+		$verify = $this->cruddata_model->GetBy('Verification',$Qlue)->row();
+
+		if($verify == NULL){
+			redirect(site_url('/#null')); #jika null
+		}
+		if($verify->Expired_at >= time()){
+			redirect(site_url('/#expired')); #jika expired
+		}
+		if($verify->Status == 'On Progress Verification Account'){
+			# update verification n update m_candidate
+			if($verify->Role == 'Candidate'){
+				$data['Verified'] = 1; #update verified
+				$this->crudmaster_model->Update('m_candidate', 'UniqID', $verify->UniqID, $data);
+				#ubah key verification
+				$this->dverification_model->Accept($verify->ID, 'Success verification Account');
+				# redirect to thanks
+				redirect(site_url('/thanks/#Success-verifikasi'));
+			}
+			elseif ($verify->Role == 'Company') {
+				$data['Verified'] = 1; #update verified
+				$this->crudmaster_model->Update('m_company', 'UniqID', $verify->UniqID, $data);
+				#ubah key verification
+				$this->dverification_model->Accept($verify->ID, 'Success verification Account');
+				# redirect to thanks
+				redirect(site_url('/thanks/#Success-verifikasi'));
+			}
+		}
+       	else {
+       		redirect(site_url('/#not-found-key'));
+       	}
+	}
+
+	public function thanks()
+	{
+		$view = 'Public/thanks';
+		$this->load->view($view);
+	}
+
+	public function resetpassword($Key)
+	{
+		#cari Key
+		$Qlue = array('Keep' => $Key);
+		$verify = $this->cruddata_model->GetBy('Verification',$Qlue)->row();
+
+		if($verify == NULL){
+			redirect(site_url('/#null')); #jika null
+		}
+		if($verify->Expired_at >= time()){
+			redirect(site_url('/#expired')); #jika expired
+		}
+		if($verify->Status == 'On Progress Reset Password'){
+			# update verification n update m_candidate
+			
+			$data['UniqID'] = $verify->UniqID;
+			$data['Key'] = $Key; 
+			if($verify->Role == 'Candidate'){
+				# redirect to thanks
+				$data['Action'] = base_url('Identic/ForgetPost');
+				$view = 'Public/Identic/reset';
+       			$this->template_library->load('Layout',$view, $data);
+			}
+			elseif ($verify->Role == 'Company') {
+				# redirect to thanks
+				$data['Action'] = base_url('Auth/ForgetPost');
+				$view = 'Public/Auth/reset';
+       			$this->template_library->load('Auth',$view, $data);
+			}
+		}
+       	else {
+       		redirect(site_url('/#not-found-key'));
+       	}
+	}
+
+	public function sendreset()
+	{
+		#cari Key
+		$Qlue = array('Keep' => $Key);
+		$verify = $this->cruddata_model->GetBy('Verification',$Qlue)->row();
+
+		if($verify == NULL){
+			redirect(site_url('/#null')); #jika null
+		}
+		if($verify->Expired_at >= time()){
+			redirect(site_url('/#expired')); #jika expired
+		}
+		if($verify->Status == 'On Progress Reset Password'){
+			# update verification n update m_candidate
+			
+			$data['UniqID'] = $verify->UniqID;
+			$data['Key'] = $Key; 
+			if($verify->Role == 'Candidate'){
+				# redirect to thanks
+				$data['Action'] = base_url('Identic/ForgetPost');
+				$view = 'Public/Identic/reset';
+       			$this->template_library->load('Layout',$view, $data);
+			}
+			elseif ($verify->Role == 'Company') {
+				# redirect to thanks
+				$data['Action'] = base_url('Auth/ForgetPost');
+				$view = 'Public/Auth/reset';
+       			$this->template_library->load('Auth',$view, $data);
+			}
+		}
+       	else {
+       		redirect(site_url('/#not-found-key'));
+       	}
+	}
+	#endregion
 }

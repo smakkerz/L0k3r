@@ -26,14 +26,14 @@ class Identic_library {
 		}
 	}
 
-	function Login($uUser, $Pass){
+	function Login($User, $Pass){
 	$Status = "";
-	$login=$this->CI->db->query("SELECT *
-	 FROM m_candidate WHERE Username ='$User' OR Email = '$User' OR Phone = '$User' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
-	$this->depwd = $this->CI->encryption->decrypt($login->Password);
-	if($Login == NULL) {
+	$login = $this->CI->db->query("SELECT *
+	 FROM m_candidate WHERE Email = '$User' AND IsDeleted = 0 ORDER BY Created_at ASC")->row();
+	if($login == NULL) {
 		return $Status = "not found";
 	}
+	$this->depwd = $this->CI->encryption->decrypt($login->Password);
 	if($this->depwd == $Pass) {
 
 		$this->CI->session->set_userdata(array(
@@ -45,18 +45,23 @@ class Identic_library {
                 'Unique_user' => $login->UniqID,
                 'username' => $login->Username,
                 'email'=> $login->Email,
-                'active'=> $login->IsActive
+                'active'=> $login->IsActive,
+                'verified' => $login->Verified,
+                'created_at' => $login->Created_at
                 ));
-		$Status = "Sukses";
+		$Status = $login;
 		return $Status;
+	}
+	else {
+		return $Status = "not match";
 	}
 	return $Status;
     }
     
-    function ValidasiAdd($Table, $Field, $Data){
+    function Validasi($Field, $Data){
 	$Status = "Found";
 	$data=$this->CI->db->query("SELECT *
-	 FROM $Table WHERE $Field = '$Data' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
+	 FROM m_candidate WHERE $Field = '$Data' AND IsDeleted = 0 ORDER BY Created_at ASC ")->row();
 	if($data == NULL) {
 		$Status = "Not Found";
 		return $Status;

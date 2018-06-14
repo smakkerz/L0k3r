@@ -3,11 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Useragent_library
 {
-    //var $CI;
-
     function __construct() {
         $this->CI = &get_instance();
-//        $this->isLogin();
     }
 
 	function GetDataClient(){
@@ -20,10 +17,10 @@ class Useragent_library
 			$agent = 'Data user gagal di dapatkan';
 		}
     	$ip = "Testing dilocalhost";
-		// $ip = $this->CI->input->ip_address();
-  //   	$clientDetails = json_decode(file_get_contents("http://ipinfo.io/$ip/json"));
-  //   	$ip = $clientDetails->country." " .$clientDetails->region . " ". $clientDetails->ip;
-
+		$ip = $this->CI->input->ip_address();
+    	// $clientDetails = json_decode(file_get_contents("http://ipinfo.io/$ip/json"));
+    	// $country = $clientDetails->country == "ID" ? "Indonesia" : $clientDetails->country;
+    	// $ip = $country.", " .$clientDetails->region . " ". $clientDetails->ip;
 		$datas = array(
 			"Device" => $this->CI->agent->mobile() == NULL ? "is_Dekstop" : $this->CI->agent->mobile(),
 			"Browser" => $agent,

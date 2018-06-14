@@ -3,10 +3,10 @@
     <div class="container">
       <div class="col-xs-12">
         <br><br>
-        <h2>Tersedia <?= date(DATE_RFC1123, time()+7); ?><mark>1,259</mark> lowongan kerja aktif!</h2>
+        <h2>Tersedia <mark>1,259</mark> lowongan kerja aktif!</h2>
         <h5 class="font-alt">Apakah salah satunya adalah takdir-mu ?</h5>
         <br><br><br>
-        <?php echo local_to_gmt(time())."-" . time()+7; ?>
+
         <form class="header-job-search">
           <div class="input-keyword">
             <input type="text" class="form-control" placeholder="Job title, skills, or company">

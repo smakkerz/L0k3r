@@ -1,3 +1,15 @@
+<?php
+if(!$this->session->userdata('verified')){
+
+	$date = strtotime($this->session->userdata('created_at'));
+	$suspend_date = date('Y-m-d', strtotime('+30 days', strtotime($this->session->userdata('created_at'))));
+
+	$Expired = $this->settingvalue_library->IntervalDays(date('Y-m-d'), $suspend_date);
+}
+else {
+	$Expired = null;
+}
+?>
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if !IE]><!-->
@@ -6,9 +18,10 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Color Admin | Dashboard</title>
-	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
-	<meta content="" name="description" />
-	<meta content="" name="author" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="JobSribe.Com, Lowongan Kerja Terbaru Setai Hari dari Segala Bidang Pekerjaan & Lokasi Kerja">
+    <meta name="keywords" content="">
+    <meta name="theme-color" content="#4db8fe">
 	
 	<!-- ================== BEGIN BASE CSS STYLE ================== -->
 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -28,7 +41,7 @@
 	<!-- ================== END PAGE LEVEL STYLE ================== -->
 	
 	<!-- ================== BEGIN BASE JS ================== -->
-	<script src="<?= $this->config->item('assets_url') ?>Company/plugins/pace/pace.min.js"></script>
+<!-- 	<script src="<?= $this->config->item('assets_url') ?>Company/plugins/pace/pace.js"></script> -->	
 	<!-- ================== END BASE JS ================== -->
 </head>
 <body>
@@ -53,17 +66,63 @@
 			
 			<!-- begin header-nav -->
 			<ul class="navbar-nav navbar-right">
-				<li>
+<!-- 				<li>
 					<form class="navbar-form">
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Enter keyword" />
 							<button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
 						</div>
 					</form>
+				</li> -->
+				<li class="dropdown">
+				<?php if($Expired != null) { ?>
+					<a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+						<i class="fa fa-exclamation-triangle"></i>
+						<span class="label bg-red"><?= $Expired ?> days</span>
+					</a>
+					<ul class="dropdown-menu media-list dropdown-menu-right">
+						<li class="dropdown-header">Verifikasi Akun</li>
+						<li class="media">
+							<a href="javascript:;">
+								<div class="media-left">
+									<i class="fa fa-bug media-object bg-red"></i>
+								</div>
+								<div class="media-body">
+									<h6 class="media-heading">Segera lakukan verifikasi akun
+									 <i class="fa fa-exclamation-triangle text-danger"></i></h6>
+									<div class="text-muted f-s-11"> <?= $Expired ?> hari sebelum di suspen</div>
+								</div>
+							</a>
+						</li>
+						<li class="dropdown-footer text-center">
+							<a href="<?= base_url('Cms/sendverifikasi') ?>">Kirim Verifikasi Akun</a>
+						</li>
+					</ul>
+				<?php } else { ?>
+					<a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
+						<i class="fa fa-check text-primary"></i>						
+						<span class="label bg-blue">terverifikasi</span>
+					</a>
+					<ul class="dropdown-menu media-list dropdown-menu-right">
+						<li class="dropdown-header">Verifikasi Akun Sukses</li>
+						<li class="media">
+							<a href="javascript:;">
+								<div class="media-left">
+									<i class="fa fa-check media-object bg-blue"></i>
+								</div>
+								<div class="media-body">
+									<h6 class="media-heading">Akun masih aktif
+									 <i class="fa fa-check text-primary"></i></h6>
+									<div class="text-muted f-s-11">terverifikasi</div>
+								</div>
+							</a>
+						</li>
+					</ul>
+				<?php } ?>
 				</li>
 				<li class="dropdown">
 					<a href="javascript:;" data-toggle="dropdown" class="dropdown-toggle f-s-14">
-						<i class="fa fa-bell"></i>
+						<i class="fa fa-bell text-success"></i>
 						<span class="label">5</span>
 					</a>
 					<ul class="dropdown-menu media-list dropdown-menu-right">
@@ -162,6 +221,7 @@
 
 		<!--- Content  -->
 		<?=  $contents;?>
+		<?= $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
 		<!--- End Content -->
 
 <!-- begin theme-panel -->
@@ -247,6 +307,50 @@
 	</div>
 	<!-- end page container -->
 	
+	<!-- Modal Login  -->
+	<div id="myLogin" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Login</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>Sebagai Kandidat <a  href="<?= base_url("login/candidate") ?>">disini</a>.</p>
+	        <p>Sebagai Perusahaan <a  href="<?= base_url("login/company") ?>">disini</a>.</p>
+
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+
+	  </div>
+	</div>
+	<!--- End Modal Login  -->
+	<!--- MOdal -->
+	  <div id="modal-msg" class="modal" tabindex="-5">
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+	                        <h4 class="blue bigger" id="title-message"></h4>
+	                </div>
+	                <div class="modal-body" id="content-message">
+	                </div>
+	                    <div class="modal-footer wizard-actions">
+	                        <button type="submit" data-dismiss="modal" class="btn btn-sm btn-primary btn-round">
+	                                Close
+	                            <i class="ace-icon fa fa-times"></i>
+	                        </button>
+	                    </div>
+	            </div>
+	        </div>
+	    </div>
+	<!-- End Modal --> 
+
 	<!-- ================== BEGIN BASE JS ================== -->
 	<script src="<?= $this->config->item('assets_url') ?>Company/plugins/jquery/jquery-3.2.1.min.js"></script>
 	<script src="<?= $this->config->item('assets_url') ?>Company/plugins/jquery-ui/jquery-ui.min.js"></script>
@@ -279,7 +383,64 @@
 		$(document).ready(function() {
 			App.init();
 			Dashboard.init();
+			
 		});
 	</script>
+	<script type="text/javascript">
+		    jQuery(function($) {
+
+			    $(document).ready(function(){
+				    var thehours = new Date().getHours();
+					var themessage;
+					var morning = ('Pagi');
+					var afternoon = ('Sore');
+					var evening = ('Malam');
+					var flag;
+
+					if (thehours >= 0 && thehours < 11) {
+
+						themessage = morning;
+
+						flag = 'fa-cloud'; 
+
+				  	} else if (thehours >= 11 && thehours < 15) {
+
+				    	themessage = 'Siang';
+
+				    	flag = 'fa-certificate  yellow';
+
+					} else if (thehours >= 15 && thehours < 18) {
+
+						themessage = afternoon;
+
+						flag = 'fa-certificate  orange';
+
+					} else if (thehours >= 18 && thehours < 24) {
+
+						themessage = evening;
+
+						flag = 'fa-circle';
+
+					}
+
+					//$('#flag').addClass("fa fa-flag "+flag);
+					$('#greeting').append(themessage);
+
+
+				    var msg = $("#message").val();
+				        if(msg == 'verified'){
+							$("#title-message").append('Mohon lakukan verifikasi Akun');
+							$("#content-message").append('<h3>Jika belum mendapatkan notifikasi verifikasi di Email, silahkan tekan tombol kirim verifikasi dibawah ini</h3>'+
+								'<a href="<?= base_url('Cms/sendverifikasi') ?>">Kirim Verifikasi Akun</a>');
+				   			$("#modal-msg").modal("show");
+				       	}
+				       	else if (msg == 'sendverified') {
+							$("#title-message").append('Verifikasi telah dikirim');
+							$("#content-message").append("<h2 style='text-align: justify;'>Silahkan cek email Anda</h2>");
+				   			$("#modal-msg").modal("show");
+				       	}
+				});
+			});
+    	</script>
 </body>
 </html>

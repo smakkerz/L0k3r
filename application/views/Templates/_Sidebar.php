@@ -1,4 +1,4 @@
-<!-- begin sidebar scrollbar -->
+<!--- begin sidebar scrollbar -->
 <div data-scrollbar="true" data-height="100%">
 	<!-- begin sidebar user -->
 	<ul class="nav">
@@ -6,7 +6,7 @@
 			<a href="javascript:;" data-toggle="nav-profile">
 				<div class="cover with-shadow"></div>
 				<div class="image">
-					<img src="../assets/img/user/user-13.jpg" alt="" />
+					<img src="<?= base_url('Assets/Company') ?>/img/user/user-13.jpg" alt="" />
 				</div>
 				<div class="info">
 					<b class="caret pull-right"></b>
@@ -17,10 +17,10 @@
 		</li>
 		<li>
 			<ul class="nav nav-profile">
-                <li><a href="<?= base_url('Cms/profile/'.$this->session->userdata('Unique_user')) ?>"">
-                <i class="fa fa-user"></i> Profile</a></li>
-                <li><a href="javascript:;"><i class="fa fa-pencil-alt"></i> Send Feedback</a></li>
-                <li><a href="javascript:;"><i class="fa fa-question-circle"></i> Helps</a></li>
+                <li><a href="<?= base_url('Cms/profile/'.$this->session->userdata('Unique_user')) ?>">
+                <i class="fa fa-user"></i> Profil Perusahaan</a></li>
+                <li><a href="javascript:;"><i class="fa fa-star"></i> Rating Perusahaan</a></li>
+                <li><a href="javascript:;"><i class="fa fa-question-circle"></i> Bantaun</a></li>
             </ul>
 		</li>
 	</ul>
@@ -28,7 +28,7 @@
 	<!-- begin sidebar nav -->
 	<ul class="nav">
 		<li class="nav-header">Navigation</li>
-		<li class="has-sub active">
+<!-- 		<li class="has-sub active">
 			<a href="javascript:;">
 		        <b class="caret"></b>
 			    <i class="fa fa-th-large"></i>
@@ -50,32 +50,14 @@
 			    <li><a href="email_compose.html">Compose</a></li>
 			    <li><a href="email_detail.html">Detail</a></li>
 			</ul>
-		</li>
-		<li class="has-sub">
-			<a href="javascript:;">
-		        <b class="caret"></b>
-			    <i class="fa fa-gem"></i>
-			    <span>UI Elements <span class="label label-theme m-l-5">NEW</span></span> 
-			</a>
-			<ul class="sub-menu">
-				<li><a href="ui_general.html">General</a></li>
-				<li><a href="ui_typography.html">Typography</a></li>
-				<li><a href="ui_tabs_accordions.html">Tabs & Accordions</a></li>
-				<li><a href="ui_unlimited_tabs.html">Unlimited Nav Tabs</a></li>
-				<li><a href="ui_modal_notification.html">Modal & Notification <i class="fa fa-paper-plane text-theme m-l-5"></i></a></li>
-				<li><a href="ui_widget_boxes.html">Widget Boxes</a></li>
-				<li><a href="ui_media_object.html">Media Object</a></li>
-				<li><a href="ui_buttons.html">Buttons</a></li>
-				<li><a href="ui_icons.html">Icons</a></li>
-				<li><a href="ui_simple_line_icons.html">Simple Line Icons</a></li>
-				<li><a href="ui_ionicons.html">Ionicons</a></li>
-				<li><a href="ui_tree.html">Tree View</a></li>
-				<li><a href="ui_language_bar_icon.html">Language Bar & Icon</a></li>
-				<li><a href="ui_social_buttons.html">Social Buttons</a></li>
-				<li><a href="ui_tour.html">Intro JS</a></li>
-			</ul>
-		</li>
+		</li> -->
 		<li>
+			<a href="<?= base_url('Cms/pekerjaan') ?>">
+			    <i class="fa fa-tasks"></i>
+			    <span>Lowongan <span class="label label-theme m-l-5">NEW</span></span> 
+			</a>
+		</li>
+<!-- 		<li>
 			<a href="bootstrap_4.html">
 				<div class="icon-img">
 			    	<img src="../assets/img/logo/logo-bs4.png" alt="" />
@@ -166,8 +148,8 @@
 				<li><a href="chart-js.html">Chart JS</a></li>
 			    <li><a href="chart-d3.html">d3 Chart</a></li>
 			</ul>
-		</li>
-		<li><a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a></li>
+		</li> -->
+<!-- 		<li><a href="calendar.html"><i class="fa fa-calendar"></i> <span>Calendar</span></a></li>
 		<li class="has-sub">
 		    <a href="javascript:;">
 		        <b class="caret"></b>
@@ -301,7 +283,7 @@
 				<li><a href="javascript:;">Menu 1.2</a></li>
 				<li><a href="javascript:;">Menu 1.3</a></li>
 			</ul>
-		</li>
+		</li> -->
         <!-- begin sidebar minify button -->
 		<li><a href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
         <!-- end sidebar minify button -->

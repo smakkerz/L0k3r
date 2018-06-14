@@ -12,14 +12,12 @@
     <h1 class="register-header">
         Sign In
         <small>Create your Color Admin Account. It’s free and always will be.</small>
-
-                <?= $this->session->userdata('error') <> '' ? $this->session->userdata('error') : ''; ?>
-                <?= $this->session->userdata('message') <> '' ? $this->session->userdata('message') : ''; ?>
+                  <p id="msg"></p>
     </h1>
     <!-- end register-header -->
     <!-- begin register-content -->
     <div class="register-content">
-        <form action="<?= $ActionLogin ?>" method="post">
+        <form action="<?= $ActionLogin ?>" method="post" id="formlogin">
             <label class="control-label">Email <span class="text-danger">*</span></label>
             <div class="row m-b-15">
                 <div class="col-md-12">
@@ -34,7 +32,7 @@
             </div>
 
           	<div class="register-buttons">
-                <button type="submit" class="btn btn-primary btn-block btn-lg">Sign In</button>
+                <button type="submit" id="submit_login" class="btn btn-primary btn-block btn-lg">Sign In</button>
             </div>
             <div class="m-t-20 m-b-40 p-b-40 text-inverse">
                 Belum mempunyai Akun? Klik <a href="<?= base_url('register/company') ?>">disini</a> untuk daftar.

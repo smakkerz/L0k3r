@@ -4,9 +4,6 @@ if (!defined('BASEPATH'))
 
 class Crudmaster_model extends CI_Model
 {
-	public $table = 'Users';
-    public $id = 'ID';
-    public $order = 'DESC';
 
     function __construct()
     {
@@ -21,9 +18,38 @@ class Crudmaster_model extends CI_Model
     return $this->db->get()->result();
     }
 
-    function Add($table, $data)
+    function Add($table, $data, $By)
     {
-        $this->db->insert($table, $data);
+        $list = array(
+            'Created_at' => date('Y-m-d H:i:s'),
+            'Created_by' => $By);
+        $list = array_replace($data,$list);
+        $this->db->insert($table, $list);
         return $this->db->insert_id();
+    }
+
+    function Update($table, $field, $id, $data)
+    {
+        $this->db->where($field, $id);
+        $this->db->update($table, $data);   
+    }
+    
+    function GetBy($table, $field, $data)
+    {
+        return $this->db->get_where($table, $field, $data);
+    }
+
+        // delete data
+    function delete($table, $field, $id)
+    {
+        $this->db->where($field, $id);
+        $this->db->delete($table);
+    }
+
+     // soft delete data
+    function softdelete($table, $field, $id)
+    {
+        $this->db->where($field, $id);
+        $this->db->delete($table, array('IsDeleted' => '1'));
     }
 }

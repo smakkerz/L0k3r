@@ -45,3 +45,23 @@
   </div>
 </div>
 <!--- End Modal Register  -->
+<!--- MOdal -->
+  <div id="modal-msg" class="modal" tabindex="-5">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="blue bigger" id="title-message"></h4>
+                </div>
+                <div class="modal-body" id="content-message">
+                </div>
+                    <div class="modal-footer wizard-actions">
+                        <button type="submit" data-dismiss="modal" class="btn btn-sm btn-primary btn-round">
+                                Close
+                            <i class="ace-icon fa fa-times"></i>
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
+<!-- End Modal --> 
